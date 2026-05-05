@@ -1,0 +1,34 @@
+{
+	"folders": {},
+	"connections": {
+		"sqlite_jdbc-19db0449f2f-499d441e050841a0": {
+			"provider": "sqlite",
+			"driver": "sqlite_jdbc",
+			"name": "miniveikals",
+			"save-password": true,
+			"configuration": {
+				"database": "C:\\Users\\User\\Desktop\\programesana\\12.klase\\pedeja tema\\miniveikals\\miniveikals",
+				"url": "jdbc:sqlite:C:\\Users\\User\\Desktop\\programesana\\12.klase\\pedeja tema\\miniveikals\\miniveikals",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}

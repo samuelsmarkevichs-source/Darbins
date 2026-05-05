@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Produkti - MiniVeikals{% endblock %}
+{% block content %}
+<h2>Mašīnas</h2>
+<div class="products-list">
+    {% for product in products %}
+    <a class="products-item" href="{{ url_for('products_show', product_id=product['id']) }}">
+        <img src="{{ url_for('static', filename='images/products/' + product['image']) }}" alt="{{ product['name'] }}">
+        <div class="product-name">{{ product["name"] }}</div>
+        <div class="product-price">{{ product["price"] }} €</div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
