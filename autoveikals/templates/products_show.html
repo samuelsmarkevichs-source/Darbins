@@ -1,13 +1,19 @@
 {% extends "base.html" %}
-{% block title %}{{ product["name"] }} - Miniveikals{% endblock %}
+{% block title %}{{ product["name"] }} - AutoMeistari{% endblock %}
 {% block content %}
 <div class="products-show">
-    <img  src="{{ url_for('static', filename='images/products/' ~ product['image']) }}" alt="{{ product['name'] }}">
-    
-    <div>
+    <div class="show-img-wrap">
+        <img src="{{ url_for('static', filename='images/products/' ~ product['image']) }}" alt="{{ product['name'] }}">
+    </div>
+
+    <div class="show-info">
+        <a class="show-back" href="/produkti">Atpakaļ uz katalogu</a>
+        {% if product['manufacturer'] %}
+        <div class="show-manufacturer">{{ product['manufacturer'] }}</div>
+        {% endif %}
         <h2>{{ product["name"] }}</h2>
-        <p>{{product['manufacturer']}}</p>
-        <p>Cena: {{ product["price"] }} EUR</p>
+        <div class="show-price-tag">{{ product["price"] }} €</div>
+        <hr class="show-divider">
     </div>
 </div>
 {% endblock %}

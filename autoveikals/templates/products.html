@@ -1,13 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Produkti - MiniVeikals{% endblock %}
+{% block title %}Mašīnas - AutoMeistari{% endblock %}
 {% block content %}
-<h2>Mašīnas</h2>
+<h2 class="products-heading">Mūsu <span>Mašīnas</span></h2>
+<p class="products-subhead">{{ products | length }} auto katalogā</p>
+
 <div class="products-list">
     {% for product in products %}
     <a class="products-item" href="{{ url_for('products_show', product_id=product['id']) }}">
-        <img src="{{ url_for('static', filename='images/products/' + product['image']) }}" alt="{{ product['name'] }}">
-        <div class="product-name">{{ product["name"] }}</div>
-        <div class="product-price">{{ product["price"] }} €</div>
+        <div class="img-wrap">
+            <img src="{{ url_for('static', filename='images/products/' + product['image']) }}" alt="{{ product['name'] }}">
+        </div>
+        <div class="product-info">
+            <div class="product-name">{{ product["name"] }}</div>
+            <div class="product-price">{{ product["price"] }} €</div>
+        </div>
     </a>
     {% endfor %}
 </div>
