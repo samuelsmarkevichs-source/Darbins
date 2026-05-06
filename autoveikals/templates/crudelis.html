@@ -1,8 +1,489 @@
 {% extends "base.html" %}
-{% block title %}Par mums - MiniVeikals{% endblock %}
+{% block title %}Pārdodiet savu mašīnu - AutoMeistari{% endblock %}
 {% block content %}
-    <h1>Pārdodiet savas mašīnas</h1>
-    <p>Mēs ņemsim visu!!!</p>
 
-    
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --garage-black: #0d0d0d;
+    --garage-dark: #1a1a1a;
+    --garage-steel: #2a2a2a;
+    --garage-chrome: #c8c8c8;
+    --garage-accent: #e8b400;
+    --garage-accent-dark: #b88c00;
+    --garage-red: #cc2200;
+    --garage-green: #1a7a1a;
+    --text-light: #f0f0f0;
+    --text-muted: #888;
+  }
+
+  .garage-section {
+    font-family: 'DM Sans', sans-serif;
+    min-height: 80vh;
+    background: var(--garage-black);
+    margin: -20px;
+    padding: 50px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Diagonal stripe background */
+  .garage-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -55deg,
+      transparent,
+      transparent 40px,
+      rgba(232, 180, 0, 0.03) 40px,
+      rgba(232, 180, 0, 0.03) 80px
+    );
+    pointer-events: none;
+  }
+
+  .garage-header {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+  }
+
+  .garage-header .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--garage-accent);
+    margin-bottom: 10px;
+  }
+
+  .garage-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 96px);
+    color: var(--text-light);
+    line-height: 0.9;
+    margin: 0 0 16px;
+    letter-spacing: 2px;
+  }
+
+  .garage-header h1 span {
+    color: var(--garage-accent);
+    display: block;
+  }
+
+  .garage-header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  /* Divider */
+  .chrome-line {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--garage-accent), transparent);
+    margin: 20px auto 0;
+  }
+
+  /* Form card */
+  .garage-form-card {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--garage-dark);
+    border: 1px solid #333;
+    border-top: 3px solid var(--garage-accent);
+    border-radius: 2px;
+    padding: 44px 48px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  /* Corner rivets */
+  .garage-form-card::before,
+  .garage-form-card::after {
+    content: '⬡';
+    position: absolute;
+    top: 14px;
+    font-size: 10px;
+    color: #444;
+  }
+  .garage-form-card::before { left: 16px; }
+  .garage-form-card::after  { right: 16px; }
+
+  /* Field groups */
+  .field-group {
+    margin-bottom: 28px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--garage-accent);
+    margin-bottom: 10px;
+  }
+
+  .field-label .required-star {
+    color: var(--garage-red);
+    margin-left: 2px;
+  }
+
+  .field-input,
+  .field-select {
+    width: 100%;
+    background: var(--garage-steel);
+    border: 1px solid #3a3a3a;
+    border-bottom: 2px solid #555;
+    color: var(--text-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    padding: 13px 16px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .field-input::placeholder {
+    color: #555;
+  }
+
+  .field-input:focus,
+  .field-select:focus {
+    border-color: var(--garage-accent);
+    border-bottom-color: var(--garage-accent);
+    box-shadow: 0 4px 20px rgba(232, 180, 0, 0.15);
+    background: #2f2f2f;
+  }
+
+  /* Select custom arrow */
+  .select-wrapper {
+    position: relative;
+  }
+
+  .select-wrapper::after {
+    content: '▼';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--garage-accent);
+    font-size: 10px;
+    pointer-events: none;
+  }
+
+  .field-select option {
+    background: var(--garage-steel);
+    color: var(--text-light);
+  }
+
+  /* Price field with currency symbol */
+  .price-wrapper {
+    position: relative;
+  }
+
+  .price-wrapper .currency {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--garage-accent);
+    pointer-events: none;
+  }
+
+  .price-wrapper .field-input {
+    padding-right: 44px;
+  }
+
+  /* Image upload zone */
+  .upload-zone {
+    border: 2px dashed #3a3a3a;
+    border-radius: 2px;
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    background: var(--garage-steel);
+  }
+
+  .upload-zone:hover,
+  .upload-zone.dragover {
+    border-color: var(--garage-accent);
+    background: #2a2a20;
+  }
+
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon {
+    font-size: 38px;
+    margin-bottom: 10px;
+    display: block;
+    filter: grayscale(1) brightness(0.6);
+    transition: filter 0.2s;
+  }
+
+  .upload-zone:hover .upload-icon {
+    filter: grayscale(0) brightness(1);
+  }
+
+  .upload-zone .upload-text {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .upload-zone .upload-text strong {
+    color: var(--garage-accent);
+  }
+
+  .upload-preview {
+    display: none;
+    margin-top: 14px;
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid #444;
+    max-height: 200px;
+  }
+
+  .upload-preview img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Field hint */
+  .field-hint {
+    font-size: 11px;
+    color: #555;
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* Two-column row */
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 580px) {
+    .field-row { grid-template-columns: 1fr; }
+    .garage-form-card { padding: 32px 24px; }
+  }
+
+  /* Divider within form */
+  .form-divider {
+    border: none;
+    border-top: 1px solid #2a2a2a;
+    margin: 32px 0;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    background: var(--garage-accent);
+    color: var(--garage-black);
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    padding: 18px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .submit-btn:hover {
+    background: #f5c200;
+    box-shadow: 0 8px 30px rgba(232, 180, 0, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .submit-btn:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+
+  /* Alerts */
+  .alert {
+    padding: 14px 18px;
+    border-radius: 2px;
+    margin-bottom: 28px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .alert-error {
+    background: rgba(204, 34, 0, 0.15);
+    border-left: 3px solid var(--garage-red);
+    color: #ff7755;
+  }
+
+  .alert-success {
+    background: rgba(26, 122, 26, 0.15);
+    border-left: 3px solid #2ecc71;
+    color: #5dde88;
+  }
+
+  .alert ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .alert ul li::before {
+    content: '— ';
+  }
+
+  /* Bottom note */
+  .form-note {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #444;
+    letter-spacing: 0.5px;
+  }
+</style>
+
+<section class="garage-section">
+  <div class="garage-header">
+    <div class="eyebrow">AutoMeistari · Iepirkšana</div>
+    <h1>Pārdod<span>savu mašīnu</span></h1>
+    <p>Aizpildi formu — mēs ņemsim visu.</p>
+    <div class="chrome-line"></div>
+  </div>
+
+  <div class="garage-form-card">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-success">
+          ✅ &nbsp; Mašīna veiksmīgi pievienota katalogam!
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if errors is defined and errors %}
+      <div class="alert alert-error">
+        <span>⚠️</span>
+        <ul>
+          {% for e in errors %}
+            <li>{{ e }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" action="/crudelis">
+
+      <!-- Name + Manufacturer -->
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="name">Nosaukums <span class="required-star">*</span></label>
+          <input class="field-input" type="text" id="name" name="name"
+                 placeholder="piem. BMW 520d" required>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="manufacturer_id">Ražotājs</label>
+          <div class="select-wrapper">
+            <select class="field-select" id="manufacturer_id" name="manufacturer_id">
+              <option value="">— Nav norādīts —</option>
+              {% for m in manufacturers %}
+                <option value="{{ m['id'] }}">{{ m['name'] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div class="field-group">
+        <label class="field-label" for="price">Cena <span class="required-star">*</span></label>
+        <div class="price-wrapper">
+          <input class="field-input" type="number" id="price" name="price"
+                 placeholder="0.00" step="0.01" min="0" required>
+          <span class="currency">€</span>
+        </div>
+        <div class="field-hint">Norādiet cenu eiro. Decimāldaļas atdaliet ar punktu.</div>
+      </div>
+
+      <hr class="form-divider">
+
+      <!-- Image upload -->
+      <div class="field-group">
+        <label class="field-label" for="image">Mašīnas foto</label>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="image" name="image"
+                 accept=".png,.jpg,.jpeg,.webp,.gif">
+          <span class="upload-icon">📸</span>
+          <div class="upload-text">
+            <strong>Nospied un ievieto attēlu šeit</strong><br>
+            PNG, JPG, JPEG, WEBP vai GIF
+          </div>
+        </div>
+        <div class="upload-preview" id="upload-preview">
+          <img id="preview-img" src="" alt="Priekšskatījums">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">⚡ PIEVIENOT MAŠĪNU</button>
+    </form>
+
+    <p class="form-note">★ &nbsp; Lauks ar zvaigznīti ir obligāts</p>
+  </div>
+</section>
+
+<script>
+  // Image preview
+  const input = document.getElementById('image');
+  const preview = document.getElementById('upload-preview');
+  const previewImg = document.getElementById('preview-img');
+  const zone = document.getElementById('upload-zone');
+
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      previewImg.src = url;
+      preview.style.display = 'block';
+      zone.querySelector('.upload-text').innerHTML =
+        `<strong>${file.name}</strong><br>${(file.size / 1024).toFixed(1)} KB`;
+    }
+  });
+
+  // Drag & drop styling
+
+</script>
+
 {% endblock %}
