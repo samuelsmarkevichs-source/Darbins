@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Pieprasījumi - Admin{% endblock %}
+{% block content %}
+
+<div class="admin-header">
+  <div class="panel-eyebrow">Admin panelis</div>
+  <h1 class="panel-title" style="font-size:clamp(36px,5vw,60px)">Pieprasī<span>jumi</span></h1>
+  <p style="color:var(--text-muted);font-size:14px;margin-top:8px;">{{ inquiries|length }} pavisam</p>
+</div>
+
+{% if inquiries %}
+  <div class="inq-table-wrap">
+    <table class="inq-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Mašīna</th>
+          <th>Klients</th>
+          <th>Kontakti</th>
+          <th>Ziņojums</th>
+          <th>Datums</th>
+          <th>Statuss</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inq in inquiries %}
+          <tr class="inq-row status-{{ inq['status'] }}">
+            <td class="inq-id">{{ inq['id'] }}</td>
+            <td class="inq-car">
+              {% if inq['product_name'] %}
+                <a href="{{ url_for('products_show', product_id=inq['product_id']) }}">
+                  {{ inq['product_name'] }}
+                </a>
+              {% else %}
+                <span style="color:var(--text-muted)">—</span>
+              {% endif %}
+            </td>
+            <td class="inq-name">{{ inq['name'] }}</td>
+            <td class="inq-contact">
+              <a href="mailto:{{ inq['email'] }}">{{ inq['email'] }}</a>
+              {% if inq['phone'] %}
+                <br><a href="tel:{{ inq['phone'] }}">{{ inq['phone'] }}</a>
+              {% endif %}
+            </td>
+            <td class="inq-message">{{ inq['message'] }}</td>
+            <td class="inq-date">{{ inq['created_at'][:10] }}</td>
+            <td class="inq-status-cell">
+              <form method="POST"
+                    action="{{ url_for('update_inquiry_status', inquiry_id=inq['id']) }}">
+                <select name="status" class="status-select" onchange="this.form.submit()">
+                  <option value="jauns"      {% if inq['status'] == 'jauns'      %}selected{% endif %}>🔵 Jauns</option>
+                  <option value="skatits"    {% if inq['status'] == 'skatits'    %}selected{% endif %}>🟡 Skatīts</option>
+                  <option value="atbildets"  {% if inq['status'] == 'atbildets'  %}selected{% endif %}>🟢 Atbildēts</option>
+                </select>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="not-found" style="min-height:40vh">
+    <div class="big-404" style="font-size:80px">📭</div>
+    <h2>Nav pieprasījumu</h2>
+    <p>Kad kāds aizpildīs formu, tas parādīsies šeit.</p>
+  </div>
+{% endif %}
+
+{% endblock %}

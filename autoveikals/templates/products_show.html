@@ -1,19 +1,146 @@
 {% extends "base.html" %}
 {% block title %}{{ product["name"] }} - AutoMeistari{% endblock %}
 {% block content %}
-<div class="products-show">
-    <div class="show-img-wrap">
-        <img src="{{ url_for('static', filename='images/products/' ~ product['image']) }}" alt="{{ product['name'] }}">
-    </div>
 
-    <div class="show-info">
-        <a class="show-back" href="/produkti">Atpakaļ uz katalogu</a>
-        {% if product['manufacturer'] %}
-        <div class="show-manufacturer">{{ product['manufacturer'] }}</div>
-        {% endif %}
-        <h2>{{ product["name"] }}</h2>
-        <div class="show-price-tag">{{ product["price"] }} €</div>
-        <hr class="show-divider">
+{% with messages = get_flashed_messages() %}
+  {% set msg = messages[0] if messages else '' %}
+  {% if msg == 'review_ok' %}
+    <div class="alert alert-success" style="margin-bottom:24px">✅ &nbsp; Atsauksme pievienota!</div>
+  {% elif msg == 'inquiry_ok' %}
+    <div class="alert alert-success" style="margin-bottom:24px">✅ &nbsp; Ziņojums nosūtīts! Sazināsimies drīzumā.</div>
+  {% elif msg.startswith('review_error') or msg.startswith('inquiry_error') %}
+    <div class="alert alert-error" style="margin-bottom:24px">
+      ⚠️ &nbsp;
+      {% for part in msg.split('|')[1:] %}{{ part }}{% if not loop.last %} · {% endif %}{% endfor %}
     </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ── Car hero ── -->
+<div class="products-show">
+  <div class="show-img-wrap">
+    <img src="{{ url_for('static', filename='images/products/' ~ product['image']) }}" alt="{{ product['name'] }}">
+  </div>
+
+  <div class="show-info">
+    <a class="show-back" href="/produkti">Atpakaļ uz katalogu</a>
+    {% if product['manufacturer'] %}
+      <div class="show-manufacturer">{{ product['manufacturer'] }}</div>
+    {% endif %}
+    <h2>{{ product["name"] }}</h2>
+    <div class="show-price-tag">{{ product["price"] }} €</div>
+
+    {% if avg_rating %}
+      <div class="show-rating">
+        <span class="rating-stars">
+          {% for i in range(1, 6) %}
+            <span class="star {% if i <= avg_rating|int %}filled{% endif %}">★</span>
+          {% endfor %}
+        </span>
+        <span class="rating-value">{{ avg_rating }} / 5</span>
+        <span class="rating-count">({{ reviews|length }} atsauksmes)</span>
+      </div>
+    {% endif %}
+
+    <hr class="show-divider">
+
+    <a class="hero-cta" href="#inquiry" style="font-size:17px;padding:12px 28px;">
+      ✉️ Interesē šī mašīna
+    </a>
+  </div>
 </div>
+
+<!-- ── Inquiry form ── -->
+<section class="panel" id="inquiry">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Sazinies ar mums</div>
+    <h3 class="panel-title">Interesē <span>{{ product["name"] }}</span>?</h3>
+  </div>
+
+  <form method="POST" action="{{ url_for('add_inquiry', product_id=product['id']) }}" class="inq-form">
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label" for="inq-name">Vārds <span class="required-star">*</span></label>
+        <input class="field-input" type="text" id="inq-name" name="name" placeholder="Jānis Bērziņš" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inq-phone">Tālrunis</label>
+        <input class="field-input" type="tel" id="inq-phone" name="phone" placeholder="+371 2X XXX XXX">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="inq-email">E-pasts <span class="required-star">*</span></label>
+      <input class="field-input" type="email" id="inq-email" name="email" placeholder="janis@gmail.com" required>
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="inq-msg">Ziņojums <span class="required-star">*</span></label>
+      <textarea class="field-input field-textarea" id="inq-msg" name="message"
+                placeholder="Pastāsti, kas tevi interesē — kad ērti sazvanīties, vai grib braukt skatīties..." required></textarea>
+    </div>
+    <button type="submit" class="submit-btn" style="max-width:320px;">📨 NOSŪTĪT ZIŅU</button>
+  </form>
+</section>
+
+<!-- ── Reviews ── -->
+<section class="panel" id="reviews">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Klientu viedokļi</div>
+    <h3 class="panel-title">Atsauksmes
+      {% if avg_rating %}
+        <span style="color:var(--accent);font-size:0.6em;letter-spacing:1px"> ★ {{ avg_rating }}</span>
+      {% endif %}
+    </h3>
+  </div>
+
+  <!-- Add review form -->
+  <div class="review-form-wrap">
+    <div class="review-form-title">Atstāj savu vērtējumu</div>
+    <form method="POST" action="{{ url_for('add_review', product_id=product['id']) }}" class="review-form">
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="rv-author">Vārds <span class="required-star">*</span></label>
+          <input class="field-input" type="text" id="rv-author" name="author" placeholder="Tavs vārds" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Vērtējums <span class="required-star">*</span></label>
+          <div class="star-picker" id="star-picker">
+            {% for i in range(1, 6) %}
+              <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" class="star-radio">
+              <label for="star{{ i }}" class="star-label" title="{{ i }} zvaigznes">★</label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="rv-body">Komentārs <span class="required-star">*</span></label>
+        <textarea class="field-input field-textarea" id="rv-body" name="body"
+                  placeholder="Ko domā par šo auto?" required></textarea>
+      </div>
+      <button type="submit" class="submit-btn" style="max-width:260px;font-size:18px;">⭐ PIEVIENOT</button>
+    </form>
+  </div>
+
+  <!-- Existing reviews -->
+  {% if reviews %}
+    <div class="reviews-list">
+      {% for r in reviews %}
+        <div class="review-card">
+          <div class="review-top">
+            <div class="review-author">{{ r['author'] }}</div>
+            <div class="review-stars">
+              {% for i in range(1, 6) %}
+                <span class="star {% if i <= r['rating'] %}filled{% endif %}">★</span>
+              {% endfor %}
+            </div>
+            <div class="review-date">{{ r['created_at'][:10] }}</div>
+          </div>
+          <p class="review-body">{{ r['body'] }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="no-reviews">Vēl nav atsauksmju. Esi pirmais!</p>
+  {% endif %}
+</section>
+
 {% endblock %}

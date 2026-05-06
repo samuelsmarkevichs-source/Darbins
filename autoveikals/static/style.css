@@ -894,3 +894,281 @@ main > * {
   nav { gap: 0; }
   nav a { padding: 6px 8px; font-size: 13px; }
 }
+
+/* ============================================================
+   PANELS (shared wrapper for reviews + inquiry sections)
+   ============================================================ */
+.panel {
+  margin-top: 56px;
+  border-top: 1px solid var(--border);
+  padding-top: 44px;
+}
+
+.panel-header {
+  margin-bottom: 32px;
+}
+
+.panel-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.panel-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(30px, 4vw, 48px);
+  letter-spacing: 2px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.panel-title span { color: var(--accent); }
+
+/* ── Inquiry form ── */
+.inq-form { max-width: 760px; }
+
+.field-textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.6;
+}
+
+/* ── Rating display (show page) ── */
+.show-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -8px 0 20px;
+}
+
+.rating-stars { display: flex; gap: 2px; }
+
+.star {
+  font-size: 20px;
+  color: var(--border-light);
+  transition: color 0.15s;
+}
+
+.star.filled { color: var(--accent); }
+
+.rating-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+
+.rating-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── Star picker (review form) ── */
+.star-picker {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 4px;
+  padding: 10px 0 4px;
+}
+
+.star-radio { display: none; }
+
+.star-label {
+  font-size: 32px;
+  color: var(--border-light);
+  cursor: pointer;
+  transition: color 0.1s;
+  line-height: 1;
+}
+
+/* highlight hovered star and all before it (row-reverse trick) */
+.star-picker .star-label:hover,
+.star-picker .star-label:hover ~ .star-label,
+.star-picker input:checked ~ .star-label {
+  color: var(--accent);
+}
+
+/* ── Review form wrapper ── */
+.review-form-wrap {
+  background: var(--dark-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  max-width: 760px;
+  margin-bottom: 36px;
+}
+
+.review-form-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--text-mid);
+  margin-bottom: 20px;
+}
+
+/* ── Reviews list ── */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 760px;
+}
+
+.review-card {
+  background: var(--dark-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: border-color 0.2s;
+}
+
+.review-card:hover { border-color: var(--border-light); }
+
+.review-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.review-author {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.review-stars { display: flex; gap: 2px; }
+.review-stars .star { font-size: 15px; }
+
+.review-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+  letter-spacing: 1px;
+}
+
+.review-body {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.no-reviews {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 20px 0;
+}
+
+/* ============================================================
+   ADMIN — INQUIRIES TABLE
+   ============================================================ */
+.admin-header { margin-bottom: 36px; }
+
+.inq-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.inq-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.inq-table thead {
+  background: var(--steel);
+  border-bottom: 2px solid var(--accent);
+}
+
+.inq-table th {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  padding: 14px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.inq-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.inq-table tbody tr:last-child { border-bottom: none; }
+.inq-table tbody tr:hover { background: var(--steel); }
+
+.inq-table td {
+  padding: 14px 16px;
+  vertical-align: top;
+  color: var(--text-mid);
+}
+
+.inq-id {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.inq-car a {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.inq-car a:hover { text-decoration: underline; }
+
+.inq-name { color: var(--text); font-weight: 500; }
+
+.inq-contact a {
+  color: var(--text-mid);
+  font-size: 12px;
+  display: block;
+  transition: color 0.15s;
+}
+
+.inq-contact a:hover { color: var(--accent); }
+
+.inq-message {
+  max-width: 260px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.inq-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+/* Status badge colouring */
+.inq-row.status-jauns     { border-left: 3px solid #4a90e2; }
+.inq-row.status-skatits   { border-left: 3px solid var(--accent); }
+.inq-row.status-atbildets { border-left: 3px solid #2ecc71; }
+
+.status-select {
+  background: var(--steel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.status-select:focus { border-color: var(--accent); }
