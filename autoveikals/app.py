@@ -10,6 +10,7 @@ UPLOAD_FOLDER = Path(__file__).parent / "static" / "images" / "products"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif"}
 
 
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
