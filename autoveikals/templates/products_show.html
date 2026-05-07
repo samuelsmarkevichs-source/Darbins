@@ -104,7 +104,7 @@
         <div class="field-group">
           <label class="field-label">Vērtējums <span class="required-star">*</span></label>
           <div class="star-picker" id="star-picker">
-            {% for i in range(1, 6) %}
+            {% for i in range(5, 0, -1) %}
               <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" class="star-radio">
               <label for="star{{ i }}" class="star-label" title="{{ i }} zvaigznes">★</label>
             {% endfor %}
